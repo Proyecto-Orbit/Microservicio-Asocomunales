@@ -231,6 +231,16 @@ export class AsocomunalService {
         `Error al desactivar Asocomunal con id ${id}`,
       );
 
+    // Enviar evento de actualización (desactivación)
+    this.producerService.sendAsocomunalEvent({
+      id: updatedEntity.id,
+      nombre: updatedEntity.nombre,
+      estado: updatedEntity.estado,
+      municipioId: updatedEntity.municipio.id,
+      municipioNombre: updatedEntity.municipio.nombre,
+      action: 'updated',
+    });
+
     return plainToInstance(AsocomunalResponseDto, updatedEntity);
   }
 
@@ -253,6 +263,16 @@ export class AsocomunalService {
     const updatedEntity = await this.asocomunalRepository.findById(id);
     if (!updatedEntity)
       throw new NotFoundException(`Error al activar Asocomunal con id ${id}`);
+
+    // Enviar evento de actualización (activación)
+    this.producerService.sendAsocomunalEvent({
+      id: updatedEntity.id,
+      nombre: updatedEntity.nombre,
+      estado: updatedEntity.estado,
+      municipioId: updatedEntity.municipio.id,
+      municipioNombre: updatedEntity.municipio.nombre,
+      action: 'updated',
+    });
 
     return plainToInstance(AsocomunalResponseDto, updatedEntity);
   }

@@ -18,11 +18,11 @@ export class Jac {
   @Column()
   estado!: boolean;
 
-  @Column()
-  asocomunalId!: number; // apunta directamente a la asocomunal local
-  @ManyToOne(() => Asocomunal, (a) => a.jacs)
+  @Column({ nullable: true })
+  asocomunalId!: number | null; // apunta directamente a la asocomunal local
+  @ManyToOne(() => Asocomunal, (a) => a.jacs, { nullable: true })
   @JoinColumn({ name: 'asocomunalId' })
-  asocomunal!: Asocomunal;
+  asocomunal!: Asocomunal | null;
 
   @Column({ unique: true })
   externalId!: number; // id de la JAC en MS2

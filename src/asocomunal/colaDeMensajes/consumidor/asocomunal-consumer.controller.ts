@@ -38,9 +38,18 @@ export class AsocomunalConsumerController {
       }
       else if (payload.tipoAccion === 'ELIMINAR' && payload.entidadId) {
         const idNumeric = parseInt(payload.entidadId, 10);
-        // Si tienes borrado lógico/borrado total:
         await this.asocomunalService.remove(idNumeric);
         console.log(`Asocomunal ${idNumeric} eliminada exitosamente desde Auditoría`);
+      }
+      else if (payload.tipoAccion === 'ACTIVAR' && payload.entidadId) {
+        const idNumeric = parseInt(payload.entidadId, 10);
+        await this.asocomunalService.activate(idNumeric);
+        console.log(`Asocomunal ${idNumeric} activada exitosamente desde Auditoría`);
+      }
+      else if (payload.tipoAccion === 'DESACTIVAR' && payload.entidadId) {
+        const idNumeric = parseInt(payload.entidadId, 10);
+        await this.asocomunalService.remove(idNumeric);
+        console.log(`Asocomunal ${idNumeric} desactivada exitosamente desde Auditoría`);
       }
     } catch (error) {
       console.error('Error procesando la solicitud de auditoría:', error.message);
