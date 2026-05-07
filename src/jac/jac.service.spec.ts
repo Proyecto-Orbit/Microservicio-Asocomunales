@@ -27,7 +27,71 @@ describe('JacService', () => {
     service = module.get<JacService>(JacService);
   });
 
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
   it('should be defined', () => {
     expect(service).toBeDefined();
+  });
+
+  describe('handleEvent', () => {
+    const basePayload = {
+      id: 100,
+      nombre: 'JAC Sincronizada',
+      estado: true,
+      asocomunalId: 1,
+    };
+
+    it('should create a new JAC if it does not exist', async () => {
+      const data = { ...basePayload, action: 'created' as const };
+      mockRepository.findOne.mockResolvedValue(null);
+      mockRepository.create.mockReturnValue(basePayload);
+
+      await service.handleEvent(data);
+
+      expect(mockRepository.findOne).toHaveBeenCalledWith({ where: { externalId: 100 } });
+      expect(mockRepository.create).toHaveBeenCalled();
+      expect(mockRepository.save).toHaveBeenCalled();
+    });
+
+    it('should update an existing JAC', async () => {
+      const data = { ...basePayload, action: 'updated' as const };
+      const existing = { id: 1, externalId: 100 };
+      mockRepository.findOne.mockResolvedValue(existing);
+
+      await service.handleEvent(data);
+
+      expect(mockRepository.update).toHaveBeenCalledWith(
+        { externalId: 100 },
+        {
+          nombre: data.nombre,
+          estado: data.estado,
+          asocomunalId: data.asocomunalId,
+        }
+      );
+    });
+
+    it('should perform logical delete on deleted action', async () => {
+      const data = { ...basePayload, action: 'deleted' as const };
+      const existing = { id: 1, externalId: 100 };
+      mockRepository.findOne.mockResolvedValue(existing);
+
+      await service.handleEvent(data);
+
+      expect(mockRepository.update).toHaveBeenCalledWith(
+        { externalId: 100 },
+        { estado: false }
+      );
+    });
+
+    it('should skip update if JAC does not exist', async () => {
+      const data = { ...basePayload, action: 'updated' as const };
+      mockRepository.findOne.mockResolvedValue(null);
+
+      await service.handleEvent(data);
+
+      expect(mockRepository.update).not.toHaveBeenCalled();
+    });
   });
 });
