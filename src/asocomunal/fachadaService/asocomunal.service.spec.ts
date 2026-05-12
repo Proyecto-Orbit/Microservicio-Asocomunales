@@ -212,8 +212,8 @@ describe('AsocomunalService', () => {
   describe('remove()', () => {
     it('debería inactivar (borrado lógico) correctamente', async () => {
       const id = 1;
-      const entity = { id, estado: true };
-      const entityInactiva = { id, estado: false };
+      const entity = { id, estado: true, municipio: { id: 10, nombre: 'Muni' } };
+      const entityInactiva = { id, estado: false, municipio: { id: 10, nombre: 'Muni' } };
 
       mockAsocomunalRepository.findById.mockResolvedValueOnce(entity);
       mockAsocomunalRepository.delete.mockResolvedValue(true);
@@ -229,8 +229,8 @@ describe('AsocomunalService', () => {
   describe('activate()', () => {
     it('debería reactivar correctamente', async () => {
       const id = 1;
-      const entity = { id, estado: false };
-      const entityActiva = { id, estado: true };
+      const entity = { id, estado: false, municipio: { id: 10, nombre: 'Muni' } };
+      const entityActiva = { id, estado: true, municipio: { id: 10, nombre: 'Muni' } };
 
       mockAsocomunalRepository.findById.mockResolvedValueOnce(entity);
       mockAsocomunalRepository.activate.mockResolvedValue(true);
