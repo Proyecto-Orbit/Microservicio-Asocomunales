@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AsocomunalController } from './asocomunal.controller';
 import { AsocomunalService } from '../fachadaService/asocomunal.service';
+import { JwtCookieGuard } from '../../auth/guards/jwt-cookie.guard';
 
 describe('AsocomunalController', () => {
   let controller: AsocomunalController;
@@ -24,7 +25,10 @@ describe('AsocomunalController', () => {
           useValue: mockAsocomunalService,
         },
       ],
-    }).compile();
+    })
+      .overrideGuard(JwtCookieGuard)
+      .useValue({ canActivate: () => true })
+      .compile();
 
     controller = module.get<AsocomunalController>(AsocomunalController);
   });

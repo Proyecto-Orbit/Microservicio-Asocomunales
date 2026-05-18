@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { JacController } from './jac.controller';
 import { JacService } from './jac.service';
+import { JwtCookieGuard } from '../auth/guards/jwt-cookie.guard';
 
 describe('JacController', () => {
   let controller: JacController;
@@ -18,7 +19,10 @@ describe('JacController', () => {
           useValue: mockJacService,
         },
       ],
-    }).compile();
+    })
+      .overrideGuard(JwtCookieGuard)
+      .useValue({ canActivate: () => true })
+      .compile();
 
     controller = module.get<JacController>(JacController);
   });

@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { MunicipioController } from './municipio.controller';
 import { MunicipioService } from './municipio.service';
+import { JwtCookieGuard } from '../auth/guards/jwt-cookie.guard';
 
 describe('MunicipioController', () => {
   let controller: MunicipioController;
@@ -22,7 +23,10 @@ describe('MunicipioController', () => {
           useValue: mockMunicipioService,
         },
       ],
-    }).compile();
+    })
+      .overrideGuard(JwtCookieGuard)
+      .useValue({ canActivate: () => true })
+      .compile();
 
     controller = module.get<MunicipioController>(MunicipioController);
   });
