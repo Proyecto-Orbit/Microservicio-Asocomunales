@@ -22,7 +22,14 @@ export class JacConsumer {
 
   @EventPattern('jac.events')
   async handleJacEvent(data: JacEventDto) {
-    console.log('Mensaje recibido de MS2:', data);
+    console.log('\n═══════════════════════════════════════════════════════════');
+    console.log('📨 Mensaje recibido de MS2 (jac-backend):');
+    console.log(`   - ID: ${data.id}`);
+    console.log(`   - Nombre: ${data.nombre}`);
+    console.log(`   - Estado: "${data.estado}" (tipo: ${typeof data.estado})`);
+    console.log(`   - Acción: ${data.action}`);
+    console.log(`   - AsocomunalId: ${data.asocomunalId}`);
+    console.log('═══════════════════════════════════════════════════════════\n');
 
     await this.jacService.handleEvent(data);
   }

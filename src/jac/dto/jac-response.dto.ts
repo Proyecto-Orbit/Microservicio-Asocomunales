@@ -11,10 +11,11 @@ export class JacResponseDto {
 
   @Expose()
   @ApiProperty({
-    example: true,
-    description: 'Estado de la JAC',
+    example: 'activa',
+    description: 'Estado de la JAC (activa, inactiva, cancelada)',
+    enum: ['activa', 'inactiva', 'cancelada'],
   })
-  estado!: boolean;
+  estado!: string;
 
   @Exclude()
   id!: number;

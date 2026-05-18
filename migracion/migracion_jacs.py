@@ -82,12 +82,11 @@ def main():
             """
             SELECT id, nombre_completo, estado, asocomunal_id
             FROM public."JAC"
-            WHERE estado != 'cancelada'
             ORDER BY id
             """
         )
         jacs = cursor_jac.fetchall()
-        print(f'✅ Encontradas {len(jacs)} JACs activas/inactivas\n')
+        print(f'✅ Encontradas {len(jacs)} JACs (incluye canceladas)\n')
         
         # ⏳ PASO 2: Migrar cada JAC
         insertadas = 0
@@ -106,8 +105,8 @@ def main():
                     })
                     continue
                 
-                # Convertir estado string a booleano
-                estado_bool = estado_str == 'activa'
+                # Ahora pasamos el estado tal cual (string)
+                estado_final = estado_str
                 
                 # Usar asocomunal_id como está (puede ser NULL)
                 asoc_id_final = asoc_id_original
@@ -129,7 +128,7 @@ def main():
                         estado = EXCLUDED.estado,
                         "asocomunalId" = EXCLUDED."asocomunalId"
                     """,
-                    (nombre_completo, estado_bool, asoc_id_final, jac_id)
+                    (nombre_completo, estado_final, asoc_id_final, jac_id)
                 )
                 
                 if ya_existe:
@@ -148,7 +147,6 @@ def main():
                 errores.append({
                     'jac_id': jac_id,
                     'nombre': nombre_completo,
-                    'municipio_id': municipio_id,
                     'asocomunal_id': asoc_id_original,
                     'error': str(e)
                 })

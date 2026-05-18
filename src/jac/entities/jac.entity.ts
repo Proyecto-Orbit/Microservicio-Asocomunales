@@ -12,11 +12,11 @@ export class Jac {
   @PrimaryGeneratedColumn()
   id!: number; // id local de la JAC en MS1
 
-  @Column()
+  @Column({ type: 'varchar', length: 100 })
   nombre!: string;
 
-  @Column()
-  estado!: boolean;
+  @Column({ type: 'varchar', length: 50, nullable: false })
+  estado!: string;
 
   @Column({ nullable: true })
   asocomunalId!: number | null; // apunta directamente a la asocomunal local
