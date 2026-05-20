@@ -5,6 +5,8 @@ import { Asocomunal } from '../accesoDatos/entities/asocomunal.entity';
 import { CreateAsocomunalDto } from './dto/request/create-asocomunal.dto';
 import { UpdateAsocomunalDto } from './dto/request/update-asocomunal.dto';
 import { AsocomunalResponseDto } from './dto/response/asocomunal-response.dto';
+import { AsocomunalPublicResponseDto } from './dto/response/asocomunal-public-response.dto';
+import { JacPublicSummaryDto } from './dto/response/jac-public-summary.dto';
 import { plainToInstance } from 'class-transformer';
 import { NotFoundException } from '@nestjs/common/exceptions/not-found.exception';
 import { Municipio } from 'src/municipio/entities/municipio.entity';
@@ -192,6 +194,52 @@ export class AsocomunalService {
 
     // Mapea cada entidad a su DTO de respuesta automáticamente
     return plainToInstance(AsocomunalResponseDto, entities);
+  }
+
+  /**
+   * Lista asocomunales con datos públicos únicamente (sin PII).
+   */
+  async findAllPublic(): Promise<AsocomunalPublicResponseDto[]> {
+    const entities = await this.asocomunalRepository.findAll();
+    return entities.map((entity) => this.toPublicDto(entity));
+  }
+
+  /**
+   * Obtiene una asocomunal por ID con datos públicos únicamente.
+   */
+  async findOnePublic(id: number): Promise<AsocomunalPublicResponseDto> {
+    const entity = await this.asocomunalRepository.findById(id);
+    if (!entity) {
+      throw new NotFoundException(`Asocomunal con id ${id} no encontrado`);
+    }
+    return this.toPublicDto(entity);
+  }
+
+  private toPublicDto(entity: Asocomunal): AsocomunalPublicResponseDto {
+    const jacs = entity.jacs ?? [];
+    const jacsSummary = jacs.map((jac) =>
+      plainToInstance(
+        JacPublicSummaryDto,
+        { nombre: jac.nombre, estado: jac.estado },
+        { excludeExtraneousValues: true },
+      ),
+    );
+
+    return plainToInstance(
+      AsocomunalPublicResponseDto,
+      {
+        id: entity.id,
+        nombre: entity.nombre,
+        estado: entity.estado,
+        municipio: {
+          id: entity.municipio?.id ?? 0,
+          nombre: entity.municipio?.nombre ?? '',
+        },
+        jacsCount: jacs.length,
+        jacs: jacsSummary.length > 0 ? jacsSummary : undefined,
+      },
+      { excludeExtraneousValues: true },
+    );
   }
 
   /**
