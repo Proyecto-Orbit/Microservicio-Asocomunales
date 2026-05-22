@@ -1,6 +1,7 @@
 import { Global, Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtCookieGuard } from './guards/jwt-cookie.guard';
+import { KeycloakKeyService } from './keycloak-key.service';
 
 /**
  * Módulo de autenticación global.
@@ -19,7 +20,7 @@ import { JwtCookieGuard } from './guards/jwt-cookie.guard';
       }),
     }),
   ],
-  providers: [JwtCookieGuard],
-  exports: [JwtCookieGuard, JwtModule],
+  providers: [JwtCookieGuard, KeycloakKeyService],
+  exports: [JwtCookieGuard, JwtModule, KeycloakKeyService],
 })
 export class AuthModule {}
