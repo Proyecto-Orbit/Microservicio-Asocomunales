@@ -39,7 +39,7 @@ describe('JacService', () => {
     const basePayload = {
       id: 100,
       nombre: 'JAC Sincronizada',
-      estado: true,
+      estado: 'activa',
       asocomunalId: 1,
     };
 
@@ -47,6 +47,7 @@ describe('JacService', () => {
       const data = { ...basePayload, action: 'created' as const };
       mockRepository.findOne.mockResolvedValue(null);
       mockRepository.create.mockReturnValue(basePayload);
+      mockRepository.save.mockResolvedValue({ id: 1, ...basePayload });
 
       await service.handleEvent(data);
 
@@ -81,7 +82,7 @@ describe('JacService', () => {
 
       expect(mockRepository.update).toHaveBeenCalledWith(
         { externalId: 100 },
-        { estado: false }
+        { estado: 'inactiva' }
       );
     });
 

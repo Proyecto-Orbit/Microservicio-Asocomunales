@@ -7,7 +7,9 @@ export class JacPublicSummaryDto {
   @ApiProperty({ example: 'JAC Barrio Centro' })
   nombre!: string;
 
+
+  /// Estado de la JAC (e.g., activa, inactiva)
   @Expose()
-  @ApiProperty({ example: true })
-  estado!: boolean;
+  @ApiProperty({ example: 'activa' })
+  estado!: string;
 }

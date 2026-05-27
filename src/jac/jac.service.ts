@@ -17,7 +17,7 @@ export class JacService {
     // Validar que estado es string
     const estadoString = String(data.estado).toLowerCase();
     if (!['activa', 'inactiva', 'cancelada'].includes(estadoString)) {
-      console.error(`[MS1] ❌ Estado inválido recibido: "${data.estado}". Se esperaba 'activa', 'inactiva' o 'cancelada'.`);
+      console.error(`[MS1] Estado inválido recibido: "${data.estado}". Se esperaba 'activa', 'inactiva' o 'cancelada'.`);
       return;
     }
     
@@ -41,7 +41,7 @@ export class JacService {
               asocomunalId: data.asocomunalId,
             }),
           );
-          console.log(`[MS1] ✅ JAC creada en BD - ID local: ${created.id}, Estado en BD: "${created.estado}" (tipo: ${typeof created.estado})`);
+          console.log(`[MS1]  JAC creada en BD - ID local: ${created.id}, Estado en BD: "${created.estado}" (tipo: ${typeof created.estado})`);
         }
         break;
 
@@ -62,7 +62,7 @@ export class JacService {
             where: { externalId: data.id },
           });
           if (updated) {
-            console.log(`[MS1] ✅ JAC guardada en BD - ID local: ${updated.id}, Estado en BD: "${updated.estado}" (tipo: ${typeof updated.estado})`);
+            console.log(`[MS1]  JAC guardada en BD - ID local: ${updated.id}, Estado en BD: "${updated.estado}" (tipo: ${typeof updated.estado})`);
           }
         }
         break;
@@ -80,7 +80,7 @@ export class JacService {
             where: { externalId: data.id },
           });
           if (deleted) {
-            console.log(`[MS1] ✅ JAC eliminada lógicamente en BD - ID local: ${deleted.id}, Estado en BD: "${deleted.estado}" (tipo: ${typeof deleted.estado})`);
+            console.log(`[MS1]  JAC eliminada lógicamente en BD - ID local: ${deleted.id}, Estado en BD: "${deleted.estado}" (tipo: ${typeof deleted.estado})`);
           }
         }
         break;
